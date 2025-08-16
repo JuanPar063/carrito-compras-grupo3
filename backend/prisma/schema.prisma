@@ -1,0 +1,77 @@
+// Agregar datos de ejemplo al schema:
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  nombre    String
+  carritos  Carrito[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuarios")
+}
+
+model Producto {
+  id          String  @id @default(uuid())
+  nombre      String  @unique
+  descripcion String?
+  precio      Float
+  stock       Int
+  categoria   String
+  imagen      String?
+  activo      Boolean @default(true)
+  
+  carritoItems CarritoItem[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("productos")
+}
+
+model Carrito {
+  id        String        @id @default(uuid())
+  usuarioId String
+  estado    EstadoCarrito @default(ACTIVO)
+  descuento Float?
+  tipoEnvio String?
+  total     Float         @default(0)
+  
+  usuario   Usuario       @relation(fields: [usuarioId], references: [id])
+  items     CarritoItem[]
+  
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("carritos")
+}
+
+model CarritoItem {
+  id         String @id @default(uuid())
+  carritoId  String
+  productoId String
+  cantidad   Int
+  precioUnitario Float
+  
+  carrito    Carrito  @relation(fields: [carritoId], references: [id], onDelete: Cascade)
+  producto   Producto @relation(fields: [productoId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([carritoId, productoId])
+  @@map("carrito_items")
+}
+
+enum EstadoCarrito {
+  ACTIVO
+  ABANDONADO
+  CONVERTIDO
+}
