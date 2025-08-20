@@ -38,7 +38,7 @@ model Producto {
 
 model Carrito {
   id        String        @id @default(uuid())
-  usuarioId String
+  usuarioId String       
   estado    EstadoCarrito @default(ACTIVO)
   descuento Float?
   tipoEnvio String?
@@ -55,7 +55,7 @@ model Carrito {
 
 model CarritoItem {
   id         String @id @default(uuid())
-  carritoId  String
+  carritoId  String 
   productoId String
   cantidad   Int
   precioUnitario Float

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { carritoApi } from '../services/api';
 import { Carrito } from '../types/carrito.types';
 
-const USUARIO_ID = 'usuario-demo-123'; // ID fijo para demo
+const USUARIO_ID = '5fc8e826-8642-4384-b75e-c2db246ba58c'; // ID fijo para demo
 
 export const useCarrito = () => {
   const [carrito, setCarrito] = useState<Carrito | null>(null);
