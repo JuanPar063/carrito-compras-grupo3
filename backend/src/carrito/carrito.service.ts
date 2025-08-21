@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCarritoDto } from './create-carrito.dto';
 import { AddItemDto } from './add-item.dto';
+import { CarritoBuilder } from './carrito.builder';
 
 @Injectable()
 export class CarritoService {
@@ -34,6 +35,18 @@ export class CarritoService {
                 },
             },
         });
+    }
+    
+    // Función que construye un carrito de un usuario específico usando Builder
+    async buildCarrito(usuarioId: string) {
+        const carrito = await this.findByUsuario(usuarioId);
+        if(!carrito) return null;
+
+        const builder = new CarritoBuilder();
+        carrito.items.forEach((item) =>{
+            builder.addProducto(item.producto, item.cantidad);
+        });
+        return builder.build();
     }
 
     async getOrCreateCarrito(usuarioId: string) {
