@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCarritoDto } from './create-carrito.dto';
 import { AddItemDto } from './add-item.dto';
 import { CarritoBuilder } from './carrito.builder';
+import { carritoObservable } from './carrito.observable';
+
 
 @Injectable()
 export class CarritoService {
@@ -109,8 +111,14 @@ export class CarritoService {
         // Actualizar total del carrito
         await this.updateCarritoTotal(carrito.id);
 
+        // Obtener carrito actualizado (lo mismo que devolverás)
+        const carritoActualizado = await this.findByUsuario(usuarioId);
+
+        // 🔔 Notificar a los observers
+        carritoObservable.notify(carritoActualizado);
+
         // Retornar carrito actualizado
-        return this.findByUsuario(usuarioId);
+        return carritoActualizado;
     }
 
     async removeItem(usuarioId: string, productoId: string) {

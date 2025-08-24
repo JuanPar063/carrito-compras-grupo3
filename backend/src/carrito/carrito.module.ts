@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CarritoController } from './carrito.controller';
 import { CarritoService } from './carrito.service';
+import { CarritoObserver } from './carrito.observer';
 
 @Module({
-  controllers: [CarritoController],
-  providers: [CarritoService]
+  providers: [CarritoService, CarritoObserver],
+  exports: [CarritoService],
 })
 export class CarritoModule {}
